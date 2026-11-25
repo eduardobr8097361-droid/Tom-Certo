@@ -1,35 +1,25 @@
 # Tom Certo
 
-PWA instalável e mobile-first para estimar a tonalidade de uma voz ou música no navegador, usando HTML, CSS e JavaScript puro.
+PWA mobile-first feito em HTML5, CSS3 e JavaScript puro para estimar tonalidade musical ou analisar o centro tonal de uma melodia cantada. O processamento de áudio é feito no aparelho.
 
-## Arquivos
+## Arquivos do app
 
-- `index.html` — estrutura, interface e modais.
-- `style.css` — tema responsivo escuro.
-- `app.js` — captura de áudio, autocorrelação para estimativa de pitch, cromagrama do espectro e correlação Krumhansl–Schmuckler.
-- `manifest.json` e `sw.js` — configuração instalável e cache do app shell.
-- `icon.svg`, `icon-192.png`, `icon-512.png` — ícones do app.
+`index.html`, `style.css`, `app.js`, `manifest.json`, `sw.js`, `icon.svg`, `icon-192.png` e `icon-512.png`. O `app.js` implementa captura do microfone, visualizador/progresso, autocorrelação de pitch, cromagrama e correlação tonal.
 
-## Publicar
+## Publicação e instalação
 
-Envie todos os arquivos para a raiz de um site servido por **HTTPS** (por exemplo, GitHub Pages, Netlify ou Vercel). A permissão do microfone e a instalação PWA exigem HTTPS, exceto em `localhost`. Não abra `index.html` como arquivo local: o service worker não funciona nesse modo.
+Publique todos os arquivos na raiz de um site **HTTPS** — GitHub Pages, Netlify e Vercel são exemplos. Acesso ao microfone, instalação PWA e service worker precisam de HTTPS (ou `localhost` para desenvolvimento). No Android, instale pelo botão do app ou menu do Chrome; no iPhone/iPad, abra no Safari e escolha **Compartilhar → Adicionar à Tela de Início**.
 
-No Android, abra o endereço no Chrome e use o botão **Instalar como App** ou o menu do navegador. No iPhone/iPad, abra no Safari, toque em **Compartilhar → Adicionar à Tela de Início**.
+Para reiniciar o teste durante validação, acrescente `?reset=1` ao endereço do app. Isso remove as chaves locais do Tom Certo deste navegador. Limpar todos os dados do site também apaga o estado local.
 
-Para testar o início do período grátis, abra `https://seu-dominio/?reset=1`. Isso apaga os dados locais do Tom Certo daquele navegador. Os dados são armazenados no `localStorage`; limpar dados do site também reinicia o teste.
+## Análise
 
-## Importante: pagamento e acesso
+**Modo Música** usa FFT/cromagrama nas 12 classes cromáticas e correlação de Krumhansl–Schmuckler para comparar as tonalidades maiores e menores. **Modo Voz** acompanha o pitch fundamental, descarta frames silenciosos ou não periódicos, agrupa notas estáveis e dá peso muito menor a passagens breves. A pontuação de tonalidade combina compatibilidade com escala, suporte à tônica e quinta, perfil tonal, nota de repouso e evidência condicional da terça. O mapeamento cromático trata enarmonias como E♯ = F e B♯ = C.
 
-Esta entrega é um site estático. O link Pix abre a cobrança indicada, mas o app **não consulta nem confirma pagamentos**. O botão “Já paguei — Liberar Acesso” espera quatro segundos e grava a liberação somente no `localStorage` deste navegador; a confirmação na interface deixa claro que isso não é validação de Pix. Em um produto comercial, não use esta liberação como prova de pagamento: integre um backend confiável ao provedor de pagamentos, confirme o webhook no servidor e emita uma autorização verificável. Tanto o limite de 24 horas quanto o desbloqueio local podem ser contornados pelo usuário, pois armazenamento e lógica cliente não são mecanismos de segurança.
+O Modo Voz mostra tonalidade estimada, nota de repouso, tempo de sustentação, confiança heurística, evidência da terça e classes de notas cantadas durante a janela. Se a terça não aparecer com força, o resultado avisa e a decisão usa os demais indícios. Tanto esse cálculo quanto a confiança são estimativas, não garantias teóricas: ruído, vibrato, acompanhamento alto, afinação e frases com poucas notas podem mudar a leitura. As janelas disponíveis são 12, 20, 25 e 30 segundos (25s por padrão).
 
-O endereço de suporte no rodapé usa `suporte@tomcerto.app` como exemplo. Troque pelo e-mail real antes da publicação.
+## Teste e pagamento
 
-## Sobre a estimativa musical
+O app inicia um período local de **15 minutos** e espelha o horário de início em mais de uma chave do armazenamento do navegador. Isso evita alguns resets acidentais, mas não é proteção contra adulteração: usuário pode limpar ou editar o `localStorage`, e qualquer regra executada apenas no navegador é contornável.
 
-O app analisa o áudio localmente, sem gravar nem transmitir a captura. A detecção de pitch por autocorrelação favorece fontes monofônicas; a estimativa tonal usa energia espectral agrupada em classes de nota e comparação com perfis Krumhansl–Schmuckler. “Confiança” é um indicador heurístico e não uma probabilidade calibrada. Ruído, reverberação, acompanhamento denso, afinação fora do padrão e mudanças de tonalidade podem afetar o resultado.
-
-## Modos de análise
-
-- **Modo Música:** mantém o cromagrama e a comparação Krumhansl–Schmuckler para estimar tonalidade maior/menor, relativa, confiança heurística e classes de notas mais presentes.
-- **Modo Voz:** segue o pitch fundamental por autocorrelação a cada ~45 ms, descarta frames abaixo do limiar de energia/periodicidade, agrupa notas consecutivas estáveis e favorece notas sustentadas, especialmente quando uma pausa ou respiração vem em seguida. O resultado destaca uma nota de repouso estimada, tempo total de sustentação e notas de apoio.
-- A janela pode ser 12, 20, 25 ou 30 segundos (25s padrão). A análise de voz é uma heurística melódica, não um identificador infalível de tonalidade — ruído, vibrato amplo, acompanhamento alto e melodia com poucas notas podem alterar a estimativa.
+O botão Pix abre o link de cobrança Nubank configurado. Esta entrega estática não consulta o Nubank nem verifica comprovantes. Ao tocar em “Já paguei — Liberar Acesso”, o app grava imediatamente a liberação em chaves locais espelhadas e avisa que não confirma a transação. Para uma venda real, substitua essa regra por uma integração de servidor que valide a confirmação do provedor de pagamentos; não use o estado do navegador como prova de pagamento.

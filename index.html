@@ -33,6 +33,7 @@
         <p class="eyebrow">OUVIDO RÁPIDO, TOM CERTO</p>
         <h1 id="pageTitle">Encontre o tom<br><span>que procura.</span></h1>
         <p class="hero-copy">Analise uma música inteira ou descubra as notas em que sua melodia cantada repousa.</p>
+        <p class="trial-notice" id="trialNotice"><span aria-hidden="true">◷</span><span><strong>Teste grátis de 15 minutos</strong><small id="trialRemaining">15:00 restantes</small></span></p>
       </section>
 
       <section class="analyzer card" aria-label="Analisador de tonalidade">
@@ -79,6 +80,7 @@
           <div class="result-stat"><span class="stat-label" id="metricOneLabel">TOM RELATIVO</span><strong id="relativeKey">—</strong></div>
           <div class="result-stat"><span class="stat-label" id="metricTwoLabel">CONFIANÇA ESTIMADA</span><strong id="confidence">—</strong></div>
         </div>
+        <p class="third-notice" id="thirdNotice" hidden></p>
         <div class="notes-section"><div class="notes-title"><span id="notesTitle">Notas mais presentes</span><span class="subtle" id="notesSubtitle">no trecho analisado</span></div><div class="note-chips" id="topNotes"></div></div>
         <p class="result-disclaimer" id="resultDisclaimer">Estimativa baseada no conteúdo harmônico captado. Em músicas com mudanças de tom, muitos instrumentos ou ruído, o resultado pode variar.</p>
         <button class="secondary-button" id="againButton" type="button">↻ <span>Analisar novamente</span></button>
@@ -87,7 +89,7 @@
       <aside class="tip-card"><span class="tip-icon" aria-hidden="true">✦</span><p><strong>Dica para um resultado melhor</strong><br>Posicione o celular perto da fonte sonora e evite conversas ou ruídos ao redor.</p></aside>
     </main>
 
-    <footer class="footer"><span>Tom Certo · ferramenta de estimativa musical</span><a href="mailto:suporte@tomcerto.app?subject=Comprovante%20Tom%20Certo">Suporte / comprovante</a></footer>
+    <footer class="footer"><span>Tom Certo · análise musical local</span></footer>
   </div>
 
   <div class="modal-backdrop" id="installHelp" hidden>
@@ -105,13 +107,12 @@
     <section class="dialog paywall-dialog" role="dialog" aria-modal="true" aria-labelledby="paywallTitle">
       <span class="dialog-mark lock-mark" aria-hidden="true">⌑</span>
       <p class="eyebrow">TOM CERTO</p>
-      <h2 id="paywallTitle">Seu período grátis de 24h terminou</h2>
-      <p>Continue descobrindo o tom de qualquer música ou voz. Pagamento único de <strong>R$ 1,99</strong> (sem mensalidade).</p>
+      <h2 id="paywallTitle">Seu teste grátis de 15 minutos acabou</h2>
+      <p>Se o app te ajudou a achar o tom, apoie com <strong>R$ 1,99</strong> (pagamento único via Pix, sem mensalidade) para continuar usando sem limite de tempo neste aparelho.</p>
       <a class="pay-button" href="https://nubank.com.br/cobrar/dqrxc/6b06f853-0a8a-40a3-a473-e1efe4e0d89b" target="_blank" rel="noopener noreferrer">Pagar R$ 1,99 no Pix (Nubank) <span aria-hidden="true">↗</span></a>
       <button class="unlock-button" id="unlockButton" type="button">Já paguei — Liberar Acesso</button>
       <p class="local-unlock-notice">Aviso: esta versão estática não verifica pagamentos Pix. A liberação abaixo é local, feita neste navegador, e não confirma uma transação.</p>
       <p class="unlock-status" id="unlockStatus" role="status" aria-live="polite"></p>
-      <a class="support-link" href="mailto:suporte@tomcerto.app?subject=Comprovante%20Tom%20Certo">Precisa de ajuda? Enviar comprovante</a>
     </section>
   </div>
 
