@@ -1,25 +1,25 @@
 # Tom Certo
 
-PWA mobile-first feito em HTML5, CSS3 e JavaScript puro para estimar tonalidade musical ou analisar o centro tonal de uma melodia cantada. O processamento de áudio é feito no aparelho.
+PWA mobile-first feito em HTML5, CSS3 e JavaScript puro para estimar o tom de uma música ou voz pelo microfone do aparelho.
 
-## Arquivos do app
+## Arquivos
 
-`index.html`, `style.css`, `app.js`, `manifest.json`, `sw.js`, `icon.svg`, `icon-192.png` e `icon-512.png`. O `app.js` implementa captura do microfone, visualizador/progresso, autocorrelação de pitch, cromagrama e correlação tonal.
+- `index.html` — interface, contador de teste e modais.
+- `style.css` — tema escuro responsivo.
+- `app.js` — captura de áudio, autocorrelação, cromagrama e correlação Krumhansl–Schmuckler; trial e instalação.
+- `manifest.json` e `sw.js` — instalação PWA e cache do app shell.
+- `icon.svg`, `icon-192.png` e `icon-512.png` — ícones.
 
-## Publicação e instalação
+## Publicar e instalar
 
-Publique todos os arquivos na raiz de um site **HTTPS** — GitHub Pages, Netlify e Vercel são exemplos. Acesso ao microfone, instalação PWA e service worker precisam de HTTPS (ou `localhost` para desenvolvimento). No Android, instale pelo botão do app ou menu do Chrome; no iPhone/iPad, abra no Safari e escolha **Compartilhar → Adicionar à Tela de Início**.
+Envie todos os arquivos para a raiz de uma hospedagem **HTTPS**, como GitHub Pages, Netlify ou Vercel. Permissão do microfone e service worker precisam de HTTPS, exceto em `localhost`. No Android, use **Instalar como App** ou o menu do Chrome. No iPhone/iPad, abra no Safari e escolha **Compartilhar → Adicionar à Tela de Início**.
 
-Para reiniciar o teste durante validação, acrescente `?reset=1` ao endereço do app. Isso remove as chaves locais do Tom Certo deste navegador. Limpar todos os dados do site também apaga o estado local.
+Para testar um novo período grátis, acrescente `?reset=1` ao endereço publicado. Isso limpa as chaves de estado e liberação do Tom Certo no navegador atual. O contador normal dura 15 minutos e seu horário inicial é espelhado em mais de uma chave local.
 
-## Análise
+## Análise de áudio
 
-**Modo Música** usa FFT/cromagrama nas 12 classes cromáticas e correlação de Krumhansl–Schmuckler para comparar as tonalidades maiores e menores. **Modo Voz** acompanha o pitch fundamental, descarta frames silenciosos ou não periódicos, agrupa notas estáveis e dá peso muito menor a passagens breves. A pontuação de tonalidade combina compatibilidade com escala, suporte à tônica e quinta, perfil tonal, nota de repouso e evidência condicional da terça. O mapeamento cromático trata enarmonias como E♯ = F e B♯ = C.
-
-O Modo Voz mostra tonalidade estimada, nota de repouso, tempo de sustentação, confiança heurística, evidência da terça e classes de notas cantadas durante a janela. Se a terça não aparecer com força, o resultado avisa e a decisão usa os demais indícios. Tanto esse cálculo quanto a confiança são estimativas, não garantias teóricas: ruído, vibrato, acompanhamento alto, afinação e frases com poucas notas podem mudar a leitura. As janelas disponíveis são 12, 20, 25 e 30 segundos (25s por padrão).
+O app pede permissão ao microfone e processa o som localmente, sem gravá-lo ou enviá-lo. A cada amostra, usa RMS para filtrar silêncio, autocorrelação no domínio do tempo para uma estimativa de pitch e FFT para acumular energia nas 12 classes cromáticas. O cromagrama é comparado aos perfis maiores e menores de Krumhansl–Schmuckler. As janelas disponíveis são 12, 20, 25 e 30 segundos (25s por padrão). O resultado informa tom principal, relativo, confiança heurística e três notas mais presentes. É uma estimativa: ruído, acompanhamento denso, afinação fora do padrão ou mudanças de tonalidade podem afetá-la.
 
 ## Teste e pagamento
 
-O app inicia um período local de **15 minutos** e espelha o horário de início em mais de uma chave do armazenamento do navegador. Isso evita alguns resets acidentais, mas não é proteção contra adulteração: usuário pode limpar ou editar o `localStorage`, e qualquer regra executada apenas no navegador é contornável.
-
-O botão Pix abre o link de cobrança Nubank configurado. Esta entrega estática não consulta o Nubank nem verifica comprovantes. Ao tocar em “Já paguei — Liberar Acesso”, o app grava imediatamente a liberação em chaves locais espelhadas e avisa que não confirma a transação. Para uma venda real, substitua essa regra por uma integração de servidor que valide a confirmação do provedor de pagamentos; não use o estado do navegador como prova de pagamento.
+Ao fim dos 15 minutos, sem liberação local ativa, o app bloqueia novas análises e mostra o link Nubank configurado para R$ 1,99. O botão **Já paguei — Liberar Acesso** grava imediatamente a liberação em mais de uma chave local. Esta versão estática não consulta o Nubank nem confirma a transação; o aviso fica visível no modal. Armazenamento local não é mecanismo de segurança e pode ser editado ou removido. Para validar pagamento de forma confiável em um produto comercial, é necessária uma integração de servidor com o provedor de pagamentos.
